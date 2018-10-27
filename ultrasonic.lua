@@ -62,6 +62,19 @@ local function parse(data)
 				lockInit.ParkingStatus  = 1
 			end	
 
+			if tempParkingStatusCnt == 0 and (lockInit.preParkingStatus1 ~= lockInit.ParkingStatus) then
+				tempParkingStatusCnt = tempParkingStatusCnt + 1
+				lockInit.preParkingStatus1 = lockInit.ParkingStatus
+			elseif tempParkingStatusCnt == 1 and (lockInit.preParkingStatus1 == lockInit.ParkingStatus) then
+				tempParkingStatusCnt = 0
+				lockTask.electoryPowerMeasure()--电压检测
+				if lockInit.mqttConnectStatusFlag == 1 then
+					mqttOutMsg.pubLockHeartBeat() --自动上锁完成后则上传一次状态
+				end
+			else
+				tempParkingStatusCnt = 0
+			end
+
 			log.info("distance measure result="..havecarRange.."mm","ParkingStatus:"..lockInit.ParkingStatus)
 		end
 	end		

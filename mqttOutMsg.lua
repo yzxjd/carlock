@@ -32,7 +32,9 @@ function pubLockHeartBeat()
     if lockInit.lockActiveFlag ~= 1 then --如果锁在动作或者采集检测时，禁止发送心跳包
         lockInit.mqttHeartBeatSendFlag = 1 --发送心跳标注位
         local lockStatusPubTopic = "lebo/parklot/getstatus"
-        local payload = "{\"VER\":\"0\",\"CMD\":\"12\",\"MD\":\"8\",\"CD\":\""..lockInit.LockDeviceID..
+        local payload = "{\"VER\":\"0\",\"CMD\":\"12\",\"MD\":\""
+                        ..tostring(lockInit.GatewayID)..
+                        "\",\"CD\":\""..lockInit.LockDeviceID..
                         "\",\"CS\":\""..tostring(lockInit.ParkingStatus)..
                         "\",\"LS\":\""..tostring(lockInit.LockStatus)..
                         "\",\"BS\":\""..tostring(lockInit.ElectricityADC)..
